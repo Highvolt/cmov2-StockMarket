@@ -1,0 +1,290 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#e4e4e4" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#e4e4e4"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:background="#FFFFFF"
+            android:orientation="vertical"
+            android:padding="5dp" >
+
+            <HorizontalScrollView
+                android:id="@+id/detailsGraphScroll"
+                android:layout_width="match_parent"
+                android:layout_height="200dp" >
+
+                <ImageView
+                    android:id="@+id/detailsGraph"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:adjustViewBounds="true"
+                    android:src="@drawable/graph_ph" />
+
+            </HorizontalScrollView>
+
+            <TextView
+                android:id="@+id/details_fullname"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-light"
+                android:text="Apple, INC"
+                android:textColor="#000000"
+                android:textSize="22sp"
+                android:textStyle="normal" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="1.0" >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="10dp"
+                android:layout_weight="0.5"
+                android:background="#FFFFFF"
+                android:orientation="vertical"
+                android:padding="5dp" >
+
+                <TextView
+                    android:id="@+id/textView1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="3dp"
+                    android:fontFamily="sans-serif-light"
+                    android:text="Nasdaq, NY"
+                    android:textColor="#000000"
+                    android:textSize="16sp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="3dp"
+                    android:weightSum="1.0" >
+
+                    <TextView
+                        android:id="@+id/details_market_state"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.45"
+                        android:background="@drawable/state_bg"
+                        android:fontFamily="sans-serif-light"
+                        android:text="OPEN"
+                        android:textColor="#000000"
+                        android:textSize="22sp"
+                        android:textStyle="normal" />
+
+                    <TextView
+                        android:id="@+id/details_localTime"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.55"
+                        android:fontFamily="sans-serif-light"
+                        android:gravity="right"
+                        android:text="10:22"
+                        android:textColor="#000000"
+                        android:textSize="22sp"
+                        android:textStyle="normal" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="10dp"
+                android:layout_weight="0.5"
+                android:background="#FFFFFF"
+                android:orientation="vertical"
+                android:padding="5dp"
+                android:weightSum="1.0" >
+
+                <TextView
+                    android:id="@+id/textView4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.5"
+                    android:fontFamily="sans-serif-light"
+                    android:text="Trading at:"
+                    android:textColor="#000000"
+                    android:textSize="16sp"
+                    android:textStyle="normal" />
+
+                <TextView
+                    android:id="@+id/textView5"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.5"
+                    android:fontFamily="sans-serif-light"
+                    android:gravity="right"
+                    android:text="$1000.00"
+                    android:textColor="#000000"
+                    android:textSize="22sp"
+                    android:textStyle="normal" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:weightSum="1.0" >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="10dp"
+                android:layout_weight="0.5"
+                android:background="#FFFFFF"
+                android:orientation="vertical"
+                android:padding="7dp"
+                android:weightSum="1.0" >
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:weightSum="1.0" >
+
+                    <ImageView
+                        android:id="@+id/imageView1"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.60"
+                        android:adjustViewBounds="true"
+                        android:src="@drawable/stock_up" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.40"
+                        android:orientation="vertical"
+                        android:paddingBottom="1dp"
+                        android:paddingTop="5dp"
+                        android:weightSum="1.0" >
+
+                        <TextView
+                            android:id="@+id/details_ticket"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:fontFamily="sans-serif-light"
+                            android:gravity="right|bottom"
+                            android:text="APPL"
+                            android:textColor="#000000"
+                            android:textSize="26sp"
+                            android:textStyle="normal"
+                            android:layout_weight="0.5" />
+
+                        <TextView
+                            android:id="@+id/details_diffPercentage"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:fontFamily="sans-serif-light"
+                            android:gravity="right|bottom"
+                            android:text="1,22%"
+                            android:textColor="@color/rising"
+                            android:textSize="26sp"
+                            android:textStyle="normal" 
+                            android:layout_weight="0.5"/>
+
+                        <TextView
+                            android:id="@+id/details_fullname"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.5"
+                            android:fontFamily="sans-serif-light"
+                            android:gravity="right"
+                            android:text="+ $1.89"
+                            android:textColor="@color/rising"
+                            android:textSize="12sp"
+                            android:textStyle="normal" />
+
+                    </LinearLayout>
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="10dp"
+                android:layout_weight="0.5"
+                android:background="#FFFFFF"
+                android:orientation="vertical"
+                
+                android:weightSum="1.0" >
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.35"
+                    android:layout_margin="5dp"
+                    android:weightSum="1.0" >
+
+                    <ImageView
+                        android:id="@+id/imageView2"
+                        android:layout_width="match_parent"
+                        android:layout_height="20dp"
+                        android:adjustViewBounds="true"
+                        android:src="@drawable/wallet" 
+                        android:layout_weight="0.5"
+                        android:layout_gravity="center_vertical"/>
+                    <TextView
+                            android:id="@+id/details_ticket"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:fontFamily="sans-serif-light"
+                            android:gravity="center"
+                            android:text="30"
+                            android:textColor="#000000"
+                            android:textSize="28sp"
+                            android:textStyle="normal"
+                            android:layout_weight="0.5" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" 
+                    android:layout_weight="0.65"
+                    android:weightSum="1.0"
+                    android:orientation="horizontal"
+                    >
+
+                    <Button
+                        android:id="@+id/button1"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:text="-" 
+                        android:layout_weight="0.5"
+                        android:fontFamily="sans-serif-light"
+                        android:textSize="30sp"	
+                        android:background="@drawable/button_wallet_left"
+                        />
+
+                    <Button
+                        android:id="@+id/button2"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.5"
+                        android:background="@drawable/button_wallet"
+                        android:fontFamily="sans-serif-light"
+                        android:textSize="30sp"
+                        android:text="+" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+</ScrollView>

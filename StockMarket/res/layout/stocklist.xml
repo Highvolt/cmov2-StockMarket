@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <FrameLayout
+        android:id="@+id/as"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:weightSum="2.0" >
+
+            <TextView
+                android:id="@+id/details_fullname"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="4dp"
+                android:layout_weight="1.0"
+                android:gravity="left"
+                android:text="/ 10"
+                android:textColor="#777777"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginRight="4dp"
+                android:layout_weight="1.0"
+                android:gravity="right"
+                android:text="x 10"
+                android:textColor="#777777"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/stock_multiplier"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/rising"
+            android:gravity="center"
+            android:paddingBottom="12dp"
+            android:paddingTop="12dp"
+            android:text="x1"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+    </FrameLayout>
+
+    <ListView
+        android:id="@+id/stock_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:divider="#00000000" >
+    </ListView>
+
+</LinearLayout>
