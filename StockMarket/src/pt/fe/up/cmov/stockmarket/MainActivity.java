@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 
+import org.json.JSONObject;
+
 
 
 import android.R.integer;
@@ -110,16 +112,7 @@ public class MainActivity extends Activity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                 Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.details_view, container, false);
-            new Thread(new Runnable() {
-				
-				@Override
-				public void run() {
-					RestClient rc=new RestClient(YahooSupport.INSTANCE.historyBaseURL, YahooSupport.INSTANCE.getParams30days(new Date(), "AAPL"));
-					rc.connect();
-					Log.d("data from yahoo",rc.result);
-					
-				}
-			}).start();
+            
             
             r=(ImageView) rootView.findViewById(R.id.detailsGraph);
             sr=(HorizontalScrollView) rootView.findViewById(R.id.detailsGraphScroll);

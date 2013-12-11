@@ -1,0 +1,9 @@
+package pt.fe.up.cmov.stockmarket;
+
+public enum YahooSupport {
+	INSTANCE;
+	private YahooSupport() {
+		// TODO Auto-generated constructor stub
+	}
+	static final String historyBaseURL="http://ichart.finance.yahoo.com/table.txt";
+}

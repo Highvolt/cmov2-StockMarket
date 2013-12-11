@@ -1,0 +1,5 @@
+package pt.fe.up.cmov.stockmarket;
+
+public enum YahooSupport {
+
+}
