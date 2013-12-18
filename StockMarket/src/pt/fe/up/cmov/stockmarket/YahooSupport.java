@@ -26,7 +26,7 @@ public enum YahooSupport {
 	static final String instantBaseURL="http://finance.yahoo.com/d/quotes";
 	static final String completeQuery="snxc4l1c6k2d1t1v";
 	static final String basicQuery="sl1c6k2d1t1v";
-	static final String existsQuery="xl1";
+	static final String existsQuery="nxl1";
 	//http://ichart.finance.yahoo.com/table.txt?a=9&b=5&c=2013&d=9&e=19&f=2013&g=d&s=DELL
 	
 	

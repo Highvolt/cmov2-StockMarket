@@ -1,10 +1,20 @@
 package pt.fe.up.cmov.stockmarket;
 
-import org.w3c.dom.Text;
+import java.util.ArrayList;
+
+import org.json.JSONException;
 
 import android.animation.Animator;
 import android.animation.Animator.AnimatorListener;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Path;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,16 +22,24 @@ import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
 import android.view.MotionEvent.PointerCoords;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 public class StockItem extends LinearLayout {
+	final static private int image_width=566;
+	final static private int image_height=67;
 	float x;
 	float y;
 	VelocityTracker vt;
 	private TextView wallet;
 	Context context;
 	int wallet_count=1;
+	private View v;
+	private Stock s;
+	BroadcastReceiver b;
+	Bitmap image=null;
+	Canvas c=null;
 	public void updateWallet(){
 		if(wallet_count>=10000){
 			if((wallet_count/1000)*1000<wallet_count){
@@ -35,214 +53,126 @@ public class StockItem extends LinearLayout {
 		}
 	}
 	
-	public StockItem(Context context){
-		super(context);
-		LayoutInflater layoutInflater = (LayoutInflater)context
-                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		View v=layoutInflater.inflate(R.layout.stockitem, this);
-		wallet=((TextView)v.findViewById(R.id.stock_wallet));
-		updateWallet();
-		this.setOnTouchListener(new OnTouchListener() {
-			
-			@Override
-			public boolean onTouch(final View v, MotionEvent event) {
-				PointerCoords pc=new PointerCoords();
-				switch (event.getAction()) {
-				case MotionEvent.ACTION_UP:
-				case MotionEvent.ACTION_CANCEL:
-					if(vt==null){
-						return false;
-					}
-					Log.d("finger","up");
-					vt.computeCurrentVelocity(10);
-					if((vt.getXVelocity()>20 || vt.getXVelocity()<-20) || v.getTranslationX()>=v.getWidth()/2 || v.getTranslationX()<=-v.getWidth()/2){
-						Log.d("yes","yes " +vt.getXVelocity());
-						if(vt.getXVelocity()>0){
-						v.animate().translationX(v.getWidth()).setListener(new AnimatorListener() {
-							
-							@Override
-							public void onAnimationStart(Animator animation) {
-								// TODO Auto-generated method stub
-								
-							}
-							
-							@Override
-							public void onAnimationRepeat(Animator animation) {
-								// TODO Auto-generated method stub
-								Log.d("repeat", "repeat");
-							}
-							
-							@Override
-							public void onAnimationEnd(Animator animation) {
-								// TODO Auto-generated method stub
-								//wallet_count-=MainActivity.StockView.multiplier;
-								updateWallet();
-								v.setTranslationX(-v.getWidth());
-								v.animate().translationX(0).setListener(new AnimatorListener() {
-									
-									@Override
-									public void onAnimationStart(Animator animation) {
-										// TODO Auto-generated method stub
-										
-									}
-									
-									@Override
-									public void onAnimationRepeat(Animator animation) {
-										// TODO Auto-generated method stub
-										Log.d("repeat", "repeat");
-									}
-									
-									@Override
-									public void onAnimationEnd(Animator animation) {
-										// TODO Auto-generated method stub
-										
-										
-									}
-									
-									@Override
-									public void onAnimationCancel(Animator animation) {
-										// TODO Auto-generated method stub
-										
-									}
-								});
-							}
-							
-							@Override
-							public void onAnimationCancel(Animator animation) {
-								// TODO Auto-generated method stub
-								
-							}
-						});
-						}else{
-							v.animate().translationX(-v.getWidth()).setListener(new AnimatorListener() {
-								
-								@Override
-								public void onAnimationStart(Animator animation) {
-									// TODO Auto-generated method stub
-									
-								}
-								
-								@Override
-								public void onAnimationRepeat(Animator animation) {
-									// TODO Auto-generated method stub
-									Log.d("repeat", "repeat");
-								}
-								
-								@Override
-								public void onAnimationEnd(Animator animation) {
-									// TODO Auto-generated method stub
-									//wallet_count+=MainActivity.StockView.multiplier;
-									updateWallet();
-									v.setTranslationX(v.getWidth());
-									v.animate().translationX(0).setListener(new AnimatorListener() {
-										
-										@Override
-										public void onAnimationStart(Animator animation) {
-											// TODO Auto-generated method stub
-											
-										}
-										
-										@Override
-										public void onAnimationRepeat(Animator animation) {
-											// TODO Auto-generated method stub
-											Log.d("repeat", "repeat");
-										}
-										
-										@Override
-										public void onAnimationEnd(Animator animation) {
-											// TODO Auto-generated method stub
-											
-											
-										}
-										
-										@Override
-										public void onAnimationCancel(Animator animation) {
-											// TODO Auto-generated method stub
-											
-										}
-									});
-								}
-								
-								@Override
-								public void onAnimationCancel(Animator animation) {
-									// TODO Auto-generated method stub
-									
-								}
-							});
-						}
-					}else{
-						Log.d("no","no "+vt.getXVelocity());
-						v.animate().translationX(0).setListener(new AnimatorListener() {
-							
-							@Override
-							public void onAnimationStart(Animator animation) {
-								// TODO Auto-generated method stub
-								
-							}
-							
-							@Override
-							public void onAnimationRepeat(Animator animation) {
-								// TODO Auto-generated method stub
-								Log.d("repeat", "repeat");
-							}
-							
-							@Override
-							public void onAnimationEnd(Animator animation) {
-								// TODO Auto-generated method stub
-								
-								
-							}
-							
-							@Override
-							public void onAnimationCancel(Animator animation) {
-								// TODO Auto-generated method stub
-								
-							}
-						});
-					}
-					vt.recycle();
-					vt=null;
-					break;
-				case MotionEvent.ACTION_DOWN:
-					event.getPointerCoords(0, pc);
-					x=pc.getAxisValue(MotionEvent.AXIS_X);
-					Log.d("finger","down");
-					vt=VelocityTracker.obtain();
-					vt.addMovement(event);
-					break;
-				case MotionEvent.ACTION_MOVE:
-					if(vt==null){
-						return false;
-					}
-					vt.addMovement(event);
-					Log.d("finger","move");
-					event.getPointerCoords(0, pc);
-					v.setTranslationX(pc.x-x);
-					Log.d("finger",""+(pc.x-x));
-					break;
-
-				default:
-					break;
+	protected void updateBitmap() {
+		if(s==null)
+			return;
+		c.drawColor(Color.WHITE);
+		int size=s.history.size();
+		double step=(double)image_width/((double)size+1);
+		double min=Double.MAX_VALUE;
+		double max=Double.MIN_VALUE;
+		ArrayList<Double> values=new ArrayList<Double>();
+		for(int i=0; i<size;i++){
+			try {
+				Double v_tmp=s.history.get(i).getDouble("close");
+				if(v_tmp>max){
+					max=v_tmp;
 				}
-				
-				return true;
+				if(v_tmp<min){
+					min=v_tmp;
+				}
+				values.add(v_tmp);
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
-			
-			
-		});
+		}
+		Path path=new Path();
+		double ratio=(double)image_height/(double)(max-min);
+		path.moveTo(0, (float)((values.get(0)-min)*ratio));
+		for(int i=0; i<size;i++){
+			//Log.d("Graph "+s.quote,""+(float)((values.get(i)-min)*ratio));
+			path.lineTo((float)(i*step), (float)((values.get(i)-min)*ratio));
+		}
+		path.lineTo((float)(size*step), (float)((s.value-min)*ratio));
+		Paint paint=new Paint();
+		paint.setColor(Color.BLACK);
+		paint.setStrokeWidth(6);
+		paint.setStyle(Paint.Style.STROKE);
+		c.drawPath(path, paint);
+		paint.setStrokeWidth(8);
+		paint.setColor(Color.GRAY);
+		c.drawLine(0, (float)((values.get(size-1)-min)*ratio), image_width, (float)((values.get(size-1)-min)*ratio), paint);
+		((ImageView)this.findViewById(R.id.imageView1)).setImageBitmap(image);
+		
 		
 	}
 	
+
+	
+	public void setContent(Stock s){
+		this.s=s;
+		updateData();
+		this.invalidate();
+		
+	}
+	
+	@Override
+	protected void onDraw(Canvas canvas) {
+		// TODO Auto-generated method stub
+		super.onDraw(canvas);
+		
+		
+	}
+	
+	protected void updateData() {
+		if(s==null)
+			return;
+		((TextView)this.findViewById(R.id.menu_quotes)).setText(s.quote);
+		((TextView)this.findViewById(R.id.menu_price)).setText("$"+Double.toString(s.value));
+	}
+	
+	private void init(){
+		image=Bitmap.createBitmap(image_width, image_height, Bitmap.Config.ARGB_8888);
+		c=new Canvas(image);
+		 b=new BroadcastReceiver() {
+				
+				@Override
+				public void onReceive(Context context, Intent intent) {
+					
+					String tmp=intent.getStringExtra("source");
+					if(tmp!=null && s!=null && tmp.equalsIgnoreCase(s.quote)){
+						Log.d("StockUpdate", "valores"+s.quote+" "+s.value);
+						updateData();
+						if(intent.getAction().equals(Stock.historyUpdateAction)){
+							updateBitmap();
+						}
+						StockItem.this.invalidate();
+					}
+					
+				}
+			};
+			StockStorage.INSTANCE.getApplicationContext().registerReceiver(b, new IntentFilter(Stock.instantUpdateAction));
+			StockStorage.INSTANCE.getApplicationContext().registerReceiver(b, new IntentFilter(Stock.historyUpdateAction));
+	}
+	
+	public StockItem(Context context){
+		super(context);
+		init();
+		LayoutInflater layoutInflater = (LayoutInflater)context
+                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		 v=layoutInflater.inflate(R.layout.stock_menu_item, this);
+
+		
+		
+	}
+	
+	@Override
+	protected void onDetachedFromWindow() {
+		// TODO Auto-generated method stub
+		super.onDetachedFromWindow();
+		this.context.unregisterReceiver(b);
+	}
 	
 	
 	public StockItem(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
+		init();
 		LayoutInflater layoutInflater = (LayoutInflater)context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		View v=layoutInflater.inflate(R.layout.stockitem, this);
+		v=layoutInflater.inflate(R.layout.stock_menu_item, this);
 		
-
-		// TODO Auto-generated constructor stub
+		
 	}
 
 }

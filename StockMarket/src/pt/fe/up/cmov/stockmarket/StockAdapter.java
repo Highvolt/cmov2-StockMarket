@@ -12,11 +12,13 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import pt.fe.up.cmov.stockmarket.Stock;
 
-public class StockAdapter extends ArrayAdapter<Stock> {
+public class StockAdapter extends ArrayAdapter<String> {
 	Activity context;
-	public StockAdapter(Context context, int resource, List<Stock> objects) {
+	List<String> objects;
+	public StockAdapter(Context context, int resource, List<String> objects) {
 		super(context, resource, objects);
 		this.context=(Activity) context;
+		this.objects=objects;
 		// TODO Auto-generated constructor stub
 	}
 	
@@ -27,6 +29,7 @@ public class StockAdapter extends ArrayAdapter<Stock> {
 		if(convertView==null){
 			Log.d("create new",""+position);
 			View rowView= new StockItem(context);
+			((StockItem)rowView).setContent(StockStorage.INSTANCE.getOrAddStock(objects.get(position)));
 			return rowView;
 		}
 		return convertView;
