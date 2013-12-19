@@ -2,4 +2,5 @@
 <resources>
  <color name="rising">#2ecc71</color>
  <color name="falling">#d65454</color>
+ <color name="equals">#f1c40f</color>
 </resources>

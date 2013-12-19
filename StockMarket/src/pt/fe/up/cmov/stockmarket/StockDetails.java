@@ -20,15 +20,19 @@ import android.graphics.Rect;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
+import android.view.MotionEvent.PointerCoords;
 import android.view.View;
+import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.view.View.OnLayoutChangeListener;
 import android.view.animation.Interpolator;
 import android.view.animation.LinearInterpolator;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
+import android.widget.TextView;
 
-public class StockDetails extends android.app.Fragment{
+public class StockDetails extends android.app.Fragment implements OnTouchListener{
 	ImageView r=null;
 	Bitmap b=null;
 	Canvas c=null;
@@ -43,6 +47,44 @@ public class StockDetails extends android.app.Fragment{
 	ArrayList<Integer> volume=null;
 	Integer volumeMin;
 	Integer volumeMax;
+	TextView value=null;
+	TextView name=null;
+	TextView quote=null;
+	TextView percentage=null;
+	TextView diff=null;
+	ImageView changeState=null;
+	
+	private void updateDetails(){
+		this.getActivity().runOnUiThread(new Runnable() {
+			
+			@Override
+			public void run() {
+				if(s!=null){
+					name.setText(s.name);
+					value.setText("$"+s.value); //TODO correct coin
+					quote.setText(s.quote.toUpperCase());
+					percentage.setText(Double.toString(s.percentage)+"%");
+					if(s.change>0){
+						percentage.setTextColor(getResources().getColor(R.color.rising));
+						diff.setTextColor(getResources().getColor(R.color.rising));
+						changeState.setImageResource(R.drawable.stock_up);
+						diff.setText("+ $"+Double.toString(s.change)); //TODO correct coin
+					}else if(s.change<0){
+						percentage.setTextColor(getResources().getColor(R.color.falling));
+						diff.setTextColor(getResources().getColor(R.color.falling));
+						changeState.setImageResource(R.drawable.stock_down);
+						diff.setText("- $"+Double.toString(-s.change)); //TODO correct coin
+					}else{
+						percentage.setTextColor(getResources().getColor(R.color.equals));
+						diff.setTextColor(getResources().getColor(R.color.equals));
+						changeState.setImageResource(R.drawable.equals);
+						diff.setText("$"+Double.toString(s.change)); //TODO correct coin
+					}
+				}
+				
+			}
+		});
+	}
 	
 	
 	
@@ -60,14 +102,26 @@ public class StockDetails extends android.app.Fragment{
 					//updateBitmap();
 					//}
 					//Stoc.this.invalidate();
-					updateGraphAnim();
-				}
+					
+					if(intent.getAction().equals(Stock.historyUpdateAction)){
+						updateGraphAnim();
+					}
+					updateDetails();
+				} 
 				
 			}
 		};
 		StockStorage.INSTANCE.getApplicationContext().registerReceiver(br, new IntentFilter(Stock.instantUpdateAction));
 		StockStorage.INSTANCE.getApplicationContext().registerReceiver(br, new IntentFilter(Stock.historyUpdateAction));
 		
+	}
+	
+	
+	@Override
+	public void onDestroy() {
+		if(br!=null)
+			StockStorage.INSTANCE.getApplicationContext().unregisterReceiver(br);
+		super.onDestroy();
 	}
 	
 	
@@ -112,9 +166,16 @@ public class StockDetails extends android.app.Fragment{
 			}
 			
 		}
+		if(s!=null && s.value<0){
+			history.add(s.value);
+			volume.add((int)s.volume);
+		}
 		c.drawColor(Color.WHITE);
 		 path=new Path();
-	        path.moveTo(0, 10);
+		 if(s!=null && s.history!=null && history!=null && history.size()>=1){
+			 double ratio=(double)(b.getHeight()/2)/(double)(historyMax-historyMin);
+	        path.moveTo(0, (float) ((b.getHeight()/2)-(history.get(0)-historyMin)*ratio));
+	     }
 	     if(v!=null){
 	    	 v.cancel();
 	     }  
@@ -212,6 +273,19 @@ public class StockDetails extends android.app.Fragment{
         c.drawRect(rect, p);*/
         updateGraphAnim();
         r.setImageBitmap(b);
+        r.setOnTouchListener(new OnTouchListener() {
+			
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				// TODO Auto-generated method stub
+				if(event.getPointerCount()>0){
+					PointerCoords pointerCoords=new PointerCoords();
+					event.getPointerCoords(0, pointerCoords);
+					Log.d("Pointer",""+pointerCoords.x+" , "+pointerCoords.y);
+				}
+				return false;
+			}
+		});
         sr.addOnLayoutChangeListener(new OnLayoutChangeListener() {
 			
 			@Override
@@ -221,6 +295,21 @@ public class StockDetails extends android.app.Fragment{
 				sr.scrollTo(100000, 0);
 			}
 		});
+        
+        value=(TextView) rootView.findViewById(R.id.detailStockValue);
+    	name=(TextView) rootView.findViewById(R.id.details_fullname);
+    	quote=(TextView) rootView.findViewById(R.id.details_ticket);
+    	percentage=(TextView) rootView.findViewById(R.id.details_diffPercentage);
+    	diff=(TextView) rootView.findViewById(R.id.details_diffPrice);
+        changeState=(ImageView) rootView.findViewById(R.id.detailChangeState);
         return rootView;
+	}
+
+
+
+	@Override
+	public boolean onTouch(View v, MotionEvent event) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 }

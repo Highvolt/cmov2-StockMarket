@@ -30,7 +30,7 @@ public class Stock implements Serializable {
 	String name = null;
 	ArrayList<JSONObject> history = null;
 	double value = -1, change = -1, percentage = -1;
-	long volume = -1;
+	Integer volume = -1;
 	long lastHistoryUpdate = -1;
 	long lastUpdate = -1;
 	String lastTransaction = null;
@@ -90,6 +90,9 @@ public class Stock implements Serializable {
 				if (rc.status == 200) {
 					Log.d("data for " + quote, rc.result);
 					String[] vals = rc.result.split(",");
+					for(int i=0;i<vals.length;i++){
+						vals[i]=vals[i].replace("\"", "");
+					}
 					if (vals.length >= 7) {
 						if (quote.equals(vals[0])) {
 							try {
@@ -98,7 +101,8 @@ public class Stock implements Serializable {
 								e.printStackTrace();
 							}
 							try {
-								change = Double.parseDouble(vals[2]);
+								change = Double.parseDouble(vals[2].replace("+",""));
+								Log.d("Change "+quote,""+change);
 							} catch (NumberFormatException e) {
 								e.printStackTrace();
 							}
@@ -107,7 +111,8 @@ public class Stock implements Serializable {
 								try {
 									percentage = Double
 											.parseDouble(percentageSpliter[1]
-													.replaceAll("%", ""));
+													.replaceAll("%", "").replace("+",""));
+									Log.d("Percentage "+quote,""+percentage);
 								} catch (NumberFormatException e) {
 									e.printStackTrace();
 								}
@@ -117,7 +122,8 @@ public class Stock implements Serializable {
 							}
 							lastTransaction = vals[4] + " " + vals[5];
 							try {
-								volume = Long.parseLong(vals[6]);
+								Log.d("Volume",vals[6]);
+								volume = Integer.parseInt(vals[6].replace("\"", "").trim());
 							} catch (NumberFormatException e) {
 								e.printStackTrace();
 							}

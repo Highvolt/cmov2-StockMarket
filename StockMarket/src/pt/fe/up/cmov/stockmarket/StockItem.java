@@ -54,7 +54,7 @@ public class StockItem extends LinearLayout {
 	}
 	
 	protected void updateBitmap() {
-		if(s==null)
+		if(s==null || s.history==null)
 			return;
 		c.drawColor(Color.WHITE);
 		int size=s.history.size();
@@ -82,7 +82,7 @@ public class StockItem extends LinearLayout {
 		}
 		Path path=new Path();
 		double ratio=(double)image_height/(double)(max-min);
-		path.moveTo(0, (float)((values.get(0)-min)*ratio));
+		path.moveTo(0, image_height-(float)((values.get(0)-min)*ratio));
 		for(int i=0; i<size;i++){
 			//Log.d("Graph "+s.quote,""+(float)((values.get(i)-min)*ratio));
 			path.lineTo((float)(i*step), image_height-(float)((values.get(i)-min)*ratio));
