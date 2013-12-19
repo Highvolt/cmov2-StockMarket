@@ -58,6 +58,9 @@ public class StockItem extends LinearLayout {
 			return;
 		c.drawColor(Color.WHITE);
 		int size=s.history.size();
+		if(size<=1){
+			return;
+		}
 		double step=(double)image_width/((double)size+1);
 		double min=Double.MAX_VALUE;
 		double max=Double.MIN_VALUE;
@@ -82,9 +85,11 @@ public class StockItem extends LinearLayout {
 		path.moveTo(0, (float)((values.get(0)-min)*ratio));
 		for(int i=0; i<size;i++){
 			//Log.d("Graph "+s.quote,""+(float)((values.get(i)-min)*ratio));
-			path.lineTo((float)(i*step), (float)((values.get(i)-min)*ratio));
+			path.lineTo((float)(i*step), image_height-(float)((values.get(i)-min)*ratio));
 		}
-		path.lineTo((float)(size*step), (float)((s.value-min)*ratio));
+		if(s.value>=0){
+			path.lineTo((float)(size*step), image_height-(float)((s.value-min)*ratio));
+		}
 		Paint paint=new Paint();
 		paint.setColor(Color.BLACK);
 		paint.setStrokeWidth(6);
@@ -92,7 +97,7 @@ public class StockItem extends LinearLayout {
 		c.drawPath(path, paint);
 		paint.setStrokeWidth(8);
 		paint.setColor(Color.GRAY);
-		c.drawLine(0, (float)((values.get(size-1)-min)*ratio), image_width, (float)((values.get(size-1)-min)*ratio), paint);
+		c.drawLine(0, image_height-(float)((values.get(size-1)-min)*ratio), image_width, image_height-(float)((values.get(size-1)-min)*ratio), paint);
 		((ImageView)this.findViewById(R.id.imageView1)).setImageBitmap(image);
 		
 		
@@ -134,9 +139,9 @@ public class StockItem extends LinearLayout {
 					if(tmp!=null && s!=null && tmp.equalsIgnoreCase(s.quote)){
 						Log.d("StockUpdate", "valores"+s.quote+" "+s.value);
 						updateData();
-						if(intent.getAction().equals(Stock.historyUpdateAction)){
-							updateBitmap();
-						}
+						//if(intent.getAction().equals(Stock.historyUpdateAction)){
+						updateBitmap();
+						//}
 						StockItem.this.invalidate();
 					}
 					

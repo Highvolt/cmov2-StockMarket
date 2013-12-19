@@ -97,7 +97,7 @@ public class MainActivity extends Activity implements OnItemClickListener{
         		Log.d("menu","clicked ->"+st);
         		android.app.Fragment fragment = new StockDetails();
         		Bundle args=new Bundle();
-        		args.putSerializable("stock", st);
+        		args.putString("stock", st);
         		fragment.setArguments(args);
                 FragmentManager fragmentManager = getFragmentManager();
                 fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();

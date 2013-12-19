@@ -2,9 +2,12 @@ package pt.fe.up.cmov.stockmarket;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.Formatter.BigDecimalLayoutForm;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
@@ -37,13 +40,32 @@ public class Stock implements Serializable {
 		new Thread(new Runnable() {
 
 			@Override
-			public void run() {
+			public void run() { 
 				RestClient rc = new RestClient(YahooSupport.historyBaseURL,
 						YahooSupport.INSTANCE
 								.getParams30days(new Date(), quote));
 				rc.connect();
-				Log.d("data history for " + quote, rc.result);
+				//Log.d("data history for " + quote, rc.result);
 				history = YahooSupport.INSTANCE.parseHistory(rc.result);
+				Collections.sort(history,new Comparator<JSONObject>() {
+
+					@Override
+					public int compare(JSONObject lhs, JSONObject rhs) {
+						// TODO Auto-generated method stub
+						try {
+							if(((Date)lhs.get("date")).getTime()>((Date)rhs.get("date")).getTime())
+								return 1;
+							else if(((Date)lhs.get("date")).getTime()<((Date)rhs.get("date")).getTime())
+								return -1;
+							return 0;
+						} catch (JSONException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						return 0;
+					}
+				});
+			
 				lastHistoryUpdate = System.currentTimeMillis();
 				Intent intent = new Intent(historyUpdateAction);
 				intent.putExtra("source", quote);
