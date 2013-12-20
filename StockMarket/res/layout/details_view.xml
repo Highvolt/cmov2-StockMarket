@@ -224,6 +224,7 @@
                 android:weightSum="1.0" >
 
                 <LinearLayout
+                    android:id="@+id/details_walletLoc"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="0.35"
@@ -239,7 +240,7 @@
                         android:layout_weight="0.5"
                         android:layout_gravity="center_vertical"/>
                     <TextView
-                            android:id="@+id/details_ticket"
+                            android:id="@+id/details_stock_wallet"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:fontFamily="sans-serif-light"
@@ -261,7 +262,7 @@
                     >
 
                     <Button
-                        android:id="@+id/button1"
+                        android:id="@+id/details_wallet_less"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:text="-" 
@@ -272,7 +273,7 @@
                         />
 
                     <Button
-                        android:id="@+id/button2"
+                        android:id="@+id/details_wallet_more"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_weight="0.5"

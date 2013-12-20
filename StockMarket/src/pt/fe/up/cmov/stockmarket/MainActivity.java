@@ -20,6 +20,7 @@ import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.FragmentManager;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -31,6 +32,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
@@ -45,6 +47,7 @@ import android.view.animation.Interpolator;
 import android.view.animation.LinearInterpolator;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -53,7 +56,7 @@ import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
 
 @SuppressLint("ValidFragment")
-public class MainActivity extends Activity implements OnItemClickListener{
+public class MainActivity extends Activity implements OnItemClickListener, OnItemLongClickListener{
 
     private String mTitle;
 	private String mDrawerTitle;
@@ -66,6 +69,7 @@ public class MainActivity extends Activity implements OnItemClickListener{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         StockStorage.INSTANCE.setApplicationContext(getApplicationContext());
+        getActionBar().setDisplayShowHomeEnabled(true);
         mTitle = mDrawerTitle = (String) getTitle();
         //getActionBar().setDisplayHomeAsUpEnabled(true);
         //getActionBar().setHomeButtonEnabled(true);
@@ -81,13 +85,15 @@ public class MainActivity extends Activity implements OnItemClickListener{
 
             /** Called when a drawer has settled in a completely open state. */
             public void onDrawerOpened(View drawerView) {
+            	Log.d("OPEN","OPEN");
                 getActionBar().setTitle(mDrawerTitle);
                 invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+                ((ListView) findViewById(R.id.left_drawer)).invalidateViews();
+                mDrawerLayout.invalidate();
             }
         };
-        ArrayList<String> st=new ArrayList<String>();
-        st.add("AAPL");
-        st.add("MSFT");
+        
+        ArrayList<String> st=StockStorage.INSTANCE.onList;
         
         StockAdapter adp=new StockAdapter(this, R.layout.stockitem, st);
         ((ListView) findViewById(R.id.left_drawer)).setAdapter(adp);
@@ -105,27 +111,88 @@ public class MainActivity extends Activity implements OnItemClickListener{
         		
         	}
 		});
+        ((ListView) findViewById(R.id.left_drawer)).setOnItemLongClickListener(new OnItemLongClickListener() {
+
+			@Override
+			public boolean onItemLongClick(AdapterView<?> arg0, View arg1,
+					int arg2, long arg3) {
+				StockStorage.INSTANCE.removeFromWallet(((StockItem)arg1).s.quote);
+				runOnUiThread(new Runnable() {
+					public void run() {
+						StockAdapter adp=new StockAdapter(MainActivity.this, R.layout.stockitem, StockStorage.INSTANCE.onList);
+				        ((ListView) findViewById(R.id.left_drawer)).setAdapter(adp);
+					}
+				});
+				
+				return false;
+			}
+        	
+        });
         // Set the drawer toggle as the DrawerListener
         mDrawerLayout.setDrawerListener(mDrawerToggle);
-        android.app.Fragment fragment = new StockDetails();
+        android.app.Fragment fragment = new Global();
         FragmentManager fragmentManager = getFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
         
     }
 
 
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		// TODO Auto-generated method stub
+		String vals;
+		if (requestCode == INT_CODE){ //make sure fragment codes match up {
+	        vals = data.getStringExtra("newVal");
+	        runOnUiThread(new Runnable() {
+				
+				@Override
+				public void run() {
+					StockAdapter adp=new StockAdapter(MainActivity.this, R.layout.stockitem, StockStorage.INSTANCE.onList);
+			        ((ListView) findViewById(R.id.left_drawer)).setAdapter(adp);
+					
+				}
+			});
+	        
+	        
+		}
+	}
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
-
+    static public int INT_CODE=13;
 
 	@Override
 	public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	public boolean onOptionsItemSelected(MenuItem item) {
+	    // Handle item selection
+	    switch (item.getItemId()) {
+	        case R.id.action_add:
+	            AddStock ad=new AddStock();
+	            ad.show(getFragmentManager(), "addStock");
+	            return true;
+	        case R.id.Global:{
+	        	 android.app.Fragment fragment = new Global();
+	             FragmentManager fragmentManager = getFragmentManager();
+	             fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
+	        }
+	        default:
+	            return super.onOptionsItemSelected(item);
+	    }
+	}
+
+
+	@Override
+	public boolean onItemLongClick(AdapterView<?> arg0, View arg1, int arg2,
+			long arg3) {
+		// TODO Auto-generated method stub
+		return false;
 	}
     
     

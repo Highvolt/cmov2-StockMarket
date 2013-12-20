@@ -14,7 +14,7 @@ import pt.fe.up.cmov.stockmarket.Stock;
 
 public class StockAdapter extends ArrayAdapter<String> {
 	Activity context;
-	List<String> objects;
+	public List<String> objects;
 	public StockAdapter(Context context, int resource, List<String> objects) {
 		super(context, resource, objects);
 		this.context=(Activity) context;
@@ -31,6 +31,8 @@ public class StockAdapter extends ArrayAdapter<String> {
 			View rowView= new StockItem(context);
 			((StockItem)rowView).setContent(StockStorage.INSTANCE.getOrAddStock(objects.get(position)));
 			return rowView;
+		}else{
+			((StockItem)convertView).updateWallet();
 		}
 		return convertView;
 	}

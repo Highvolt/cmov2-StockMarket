@@ -15,6 +15,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.sax.RootElement;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -36,11 +37,14 @@ public class StockItem extends LinearLayout {
 	Context context;
 	int wallet_count=1;
 	private View v;
-	private Stock s;
+	public Stock s;
 	BroadcastReceiver b;
 	Bitmap image=null;
 	Canvas c=null;
 	public void updateWallet(){
+		if(s!=null){
+			wallet_count=StockStorage.INSTANCE.getQuantity(s.quote);
+		}
 		if(wallet_count>=10000){
 			if((wallet_count/1000)*1000<wallet_count){
 				wallet.setText(""+wallet_count/1000+"k+");
@@ -116,7 +120,7 @@ public class StockItem extends LinearLayout {
 	protected void onDraw(Canvas canvas) {
 		// TODO Auto-generated method stub
 		super.onDraw(canvas);
-		
+		updateWallet();
 		
 	}
 	
@@ -125,6 +129,7 @@ public class StockItem extends LinearLayout {
 			return;
 		((TextView)this.findViewById(R.id.menu_quotes)).setText(s.quote);
 		((TextView)this.findViewById(R.id.menu_price)).setText("$"+Double.toString(s.value));
+		updateWallet();
 	}
 	
 	private void init(){
@@ -143,21 +148,24 @@ public class StockItem extends LinearLayout {
 						updateBitmap();
 						//}
 						StockItem.this.invalidate();
+						updateWallet();
 					}
 					
 				}
 			};
 			StockStorage.INSTANCE.getApplicationContext().registerReceiver(b, new IntentFilter(Stock.instantUpdateAction));
 			StockStorage.INSTANCE.getApplicationContext().registerReceiver(b, new IntentFilter(Stock.historyUpdateAction));
+			wallet=(TextView) v.findViewById(R.id.menu_wallet);
+			updateWallet();
 	}
 	
 	public StockItem(Context context){
 		super(context);
-		init();
+		
 		LayoutInflater layoutInflater = (LayoutInflater)context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		 v=layoutInflater.inflate(R.layout.stock_menu_item, this);
-
+		 init();
 		
 		
 	}
@@ -166,17 +174,19 @@ public class StockItem extends LinearLayout {
 	protected void onDetachedFromWindow() {
 		// TODO Auto-generated method stub
 		super.onDetachedFromWindow();
-		this.context.unregisterReceiver(b);
+		if(b!=null){
+			StockStorage.INSTANCE.getApplicationContext().unregisterReceiver(b);
+		}
 	}
 	
 	
 	public StockItem(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
-		init();
+		
 		LayoutInflater layoutInflater = (LayoutInflater)context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		v=layoutInflater.inflate(R.layout.stock_menu_item, this);
-		
+		init();
 		
 	}
 

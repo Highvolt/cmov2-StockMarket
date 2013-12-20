@@ -155,13 +155,23 @@ public class Stock implements Serializable {
 					Log.d("data check for " + quote, rc.result);
 					
 					String[] results=rc.result.split(",");
-					if(results.length>=3){
+					if(results.length==3){
 						if(results[1].equals("\"N/A\"") && results[2].equals("0.00")){
 							
 						}else{
 							name=results[0];
 							market=results[1];
 							value=Double.parseDouble(results[2]);
+							intent.putExtra("ok", true);
+						}
+						
+					}else if(results.length>3){
+						if(results[1].equals("\"N/A\"") && results[2].equals("0.00")){
+							
+						}else{
+							name=results[0]+results[1];
+							market=results[2];
+							value=Double.parseDouble(results[3]);
 							intent.putExtra("ok", true);
 						}
 						

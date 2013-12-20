@@ -23,16 +23,20 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.MotionEvent.PointerCoords;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.View.OnLongClickListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.view.View.OnLayoutChangeListener;
 import android.view.animation.Interpolator;
 import android.view.animation.LinearInterpolator;
+import android.widget.Button;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
-public class StockDetails extends android.app.Fragment implements OnTouchListener{
+public class StockDetails extends android.app.Fragment implements OnTouchListener, OnClickListener,OnLongClickListener{
 	ImageView r=null;
 	Bitmap b=null;
 	Canvas c=null;
@@ -53,6 +57,7 @@ public class StockDetails extends android.app.Fragment implements OnTouchListene
 	TextView percentage=null;
 	TextView diff=null;
 	ImageView changeState=null;
+	private TextView wallet;
 	
 	private void updateDetails(){
 		this.getActivity().runOnUiThread(new Runnable() {
@@ -302,13 +307,104 @@ public class StockDetails extends android.app.Fragment implements OnTouchListene
     	percentage=(TextView) rootView.findViewById(R.id.details_diffPercentage);
     	diff=(TextView) rootView.findViewById(R.id.details_diffPrice);
         changeState=(ImageView) rootView.findViewById(R.id.detailChangeState);
+        wallet=(TextView) rootView.findViewById(R.id.details_stock_wallet);
+        if(s!=null){
+        	wallet.setText(Integer.toString(StockStorage.INSTANCE.getQuantity(s.quote)));
+        }
+        ((Button) rootView.findViewById(R.id.details_wallet_less)).setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				int actual=StockStorage.INSTANCE.getQuantity(s.quote);
+				if(actual>0){
+					StockStorage.INSTANCE.setQuantity(s.quote,actual-1);
+					getActivity().runOnUiThread(new Runnable() {
+						
+						@Override
+						public void run() {
+							wallet.setText(Integer.toString(StockStorage.INSTANCE.getQuantity(s.quote)));
+							
+						}
+					});
+				}
+				
+			}
+		});
+        ((Button) rootView.findViewById(R.id.details_wallet_more)).setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				int actual=StockStorage.INSTANCE.getQuantity(s.quote);
+				
+					StockStorage.INSTANCE.setQuantity(s.quote,actual+1);
+					getActivity().runOnUiThread(new Runnable() {
+						
+						@Override
+						public void run() {
+							wallet.setText(Integer.toString(StockStorage.INSTANCE.getQuantity(s.quote)));
+							
+						}
+					});
+				
+				
+			}
+		});
+        ((LinearLayout) rootView.findViewById(R.id.details_walletLoc)).setOnLongClickListener(new OnLongClickListener() {
+			
+			@Override
+			public boolean onLongClick(View v) {
+				// TODO Auto-generated method stub
+				StockNumberPicker sp=new StockNumberPicker();
+				Bundle bund=new Bundle();
+				bund.putInt("start", StockStorage.INSTANCE.getQuantity(s.quote));
+				sp.setArguments(bund);
+				sp.setTargetFragment(StockDetails.this, INT_CODE);
+				sp.show(getFragmentManager(), "stockCoisas");
+				
+				return false;
+			}
+		});
+        
         return rootView;
+	}
+	
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		int newVal=0;
+		if (requestCode == INT_CODE){ //make sure fragment codes match up {
+	        newVal = data.getIntExtra("newVal", -1);
+	        StockStorage.INSTANCE.setQuantity(s.quote,newVal);
+			getActivity().runOnUiThread(new Runnable() {
+				
+				@Override
+				public void run() {
+					wallet.setText(Integer.toString(StockStorage.INSTANCE.getQuantity(s.quote)));
+					
+				}
+			});
+	        
+		}
+	}
+	static public int INT_CODE=12;
+
+
+	@Override
+	public boolean onTouch(View v, MotionEvent event) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 
 
 	@Override
-	public boolean onTouch(View v, MotionEvent event) {
+	public void onClick(View v) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+
+	@Override
+	public boolean onLongClick(View v) {
 		// TODO Auto-generated method stub
 		return false;
 	}
